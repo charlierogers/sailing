@@ -1,0 +1,22 @@
+{
+  "name": "sailing",
+  "version": "1.0.0",
+  "description": "Practice/Regatta sign up and more",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/charlierogers/sailing.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/charlierogers/sailing/issues"
+  },
+  "homepage": "https://github.com/charlierogers/sailing#readme",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
