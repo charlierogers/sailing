@@ -6,6 +6,10 @@ var express = require('express');
 // var mysql = require('mysql');
 var app = express();
 
+app.use(express.static('public'));
+app.use(express.static('src/views'));
+app.set('views', './src/views');
+
 var port = process.env.PORT || 3000;
 
 // var connection = mysql.createConnection({
@@ -18,7 +22,7 @@ var port = process.env.PORT || 3000;
 // connection.connect();
 
 app.get('/', function (req, res) {
-    res.send('Damn dude. This is the sailing team.');
+    res.render('index')
 });
 
 app.listen(port, function () {

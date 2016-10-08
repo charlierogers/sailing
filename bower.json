@@ -1,0 +1,20 @@
+{
+  "name": "sailing",
+  "description": "Practice/Regatta sign up and more",
+  "main": "app.js",
+  "authors": [
+    "Charlie Rogers <charlierogers3.14@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/charlierogers/sailing",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "/public/lib"
+  ],
+  "dependencies": {}
+}
