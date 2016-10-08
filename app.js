@@ -12,15 +12,16 @@ var port = process.env.PORT || 3000;
 //     host: 'localhost',
 //     user: 'root',
 //     password: 'root',
-//     database: 'main'
-// });
-
+//     database: 'mai
 // connection.connect();
 
+
+
 app.get('/', function (req, res) {
-    res.send('Damn dude. This is the sailing team.');
+    res.send('Damn dude. This is the sailing .HeLLO NI hao xie xie');
 });
 
 app.listen(port, function () {
     console.log('Listening on port ' + port + '...');
 });
+s
