@@ -230,12 +230,14 @@ header {
   background-repeat: no-repeat;
   background-attachment: scroll;
   background-position: center center;
+  background: fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;
   -o-background-size: cover;
   text-align: center;
   color: white;
+  height: 100vh;
 }
 header .intro-text {
   padding-top: 100px;
@@ -256,7 +258,50 @@ header .intro-text .intro-heading {
   line-height: 50px;
   margin-bottom: 25px;
 }
+header .login {
+  margin: 20px auto;
+  width: 300px;
+}
+header .login-screen {
+  padding: 20px;
+  border-radius: 5px
+}
+header .login-title {
+  color: white;
+}
+header .app-title {
+  text-align: center;
+  color: #777;
+}
+
+header .login-form {
+  text-align: center;
+}
+header .control-group {
+  margin-bottom: 10px;
+}
+header .login-link {
+  font-size: 17px;
+  color: #fed136;
+  display: block;
+  margin-top: 12px;
+}
+header input {
+  text-align: center;
+  background-color: #ECF0F1;
+  border: 2px solid transparent;
+  border-radius: 3px;
+  font-size: 16px;
+  font-weight: 200;
+  padding: 10px 0;
+  width: 250px;
+  transition: border .5s;
+  color: black;
+}
 @media (min-width: 768px) {
+  header {
+    min-height: 100%;
+  }
   header .intro-text {
     padding-top: 300px;
     padding-bottom: 200px;
