@@ -4,7 +4,15 @@
 
 var gulp = require('gulp');
 var nodemon = require('gulp-nodemon');
+var browserify = require('browserify');
+var source = require('vinyl-source-stream');
 
+gulp.task('browserify', function () {
+    return browserify('./src/js/backboneApp.js')
+        .bundle()
+        .pipe(source('bundle.js'))
+        .pipe(gulp.dest('./public/js/'));
+});
 
 gulp.task('inject', function () {
     var wiredep = require('wiredep').stream;
@@ -17,7 +25,7 @@ gulp.task('inject', function () {
     };
 
     var injectSrc = gulp.src(['./public/css/*.css',
-        './public/js/*.js'], {read: false});
+        './public/js/*.js', './public/js/backbone/*.js'], {read: false});
 
     var injectOptions = {
         ignorePath: '/public'
@@ -29,7 +37,7 @@ gulp.task('inject', function () {
         .pipe(gulp.dest('./src/views'));
 });
 
-gulp.task('serve', ['inject'], function () {
+gulp.task('serve', ['browserify', 'inject'], function () {
     var options = {
         script: 'app.js',
         delayTime: 1,

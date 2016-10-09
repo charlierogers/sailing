@@ -8,6 +8,7 @@ var app = express();
 
 app.use(express.static('public'));
 app.use(express.static('src/views'));
+app.use(express.static('src/js'));
 app.set('views', './src/views');
 
 var port = process.env.PORT || 3000;

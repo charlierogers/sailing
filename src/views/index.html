@@ -21,12 +21,7 @@
     <link rel='stylesheet' href='/lib/bootstrap/dist/css/bootstrap.min.css' />
     <!-- endbower -->
 
-    <!-- inject:js -->
-    <script src="/js/agency.js"></script>
-    <script src="/js/agency.min.js"></script>
-    <script src="/js/contact_me.js"></script>
-    <script src="/js/jqBootstrapValidation.js"></script>
-    <!-- endinject -->
+
 
     <!-- inject:css -->
     <link rel="stylesheet" href="/css/agency.css">
@@ -48,6 +43,7 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+
 </head>
 
 <body id="page-top" class="index">
@@ -63,7 +59,7 @@
 
                     <div class="login-form">
                         <div class="control-group">
-                            <input type="text" class="login-field" value="" placeholder="username" id="login-name">
+                            <input type="text" class="login-field" value="" placeholder="email" id="login-name">
                             <label class="login-field-icon fui-user" for="login-name"></label>
                         </div>
 
@@ -72,8 +68,8 @@
                             <label class="login-field-icon fui-lock" for="login-pass"></label>
                         </div>
 
-                        <a class="btn btn-primary btn-large btn-block" href="#">login</a>
-                        <a href="#services" class="page-scroll btn btn-primary btn-large btn-block">Sign Up</a>
+                        <a id="login-btn" class="btn btn-primary btn-large btn-block" >login</a>
+                        <a id="signup-btn" class="btn btn-primary btn-large btn-block">Sign Up</a>
                         <a class="login-link" href="#">Lost your password?</a>
                     </div>
                 </div>
@@ -81,6 +77,7 @@
         </div>
     </div>
 </header>
+
 
 <!-- Contact Section -->
 <section id="contact">
@@ -154,6 +151,16 @@
         </div>
     </div>
 </footer>
+
+
+<!-- inject:js -->
+<script src="/js/agency.js"></script>
+<script src="/js/agency.min.js"></script>
+<script src="/js/bundle.js"></script>
+<script src="/js/contact_me.js"></script>
+<script src="/js/jqBootstrapValidation.js"></script>
+<!-- endinject -->
+
 
 </body>
 
