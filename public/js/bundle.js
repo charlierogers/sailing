@@ -13297,17 +13297,14 @@ var app = {};
 
 var Backbone = require('backbone');
 var IndexView = require('./indexView.js');
-var Router = require('./router.js');
 
-
-app.router = new Router();
 Backbone.history.start();
 app.indexView = new IndexView();
 
 
 
 
-},{"./indexView.js":5,"./router.js":6,"backbone":2}],5:[function(require,module,exports){
+},{"./indexView.js":5,"backbone":2}],5:[function(require,module,exports){
 /**
  * Created by charlie on 10/8/16.
  */
@@ -13324,8 +13321,8 @@ module.exports = Backbone.View.extend({
         },
 
         events: {
-            'click #login-btn': 'login',
-            'click #signup-btn': 'signUp'
+            // 'click #login-btn': 'login',
+            // 'click #signup-btn': 'signUp'
         },
         
         login: function () {
@@ -13339,31 +13336,5 @@ module.exports = Backbone.View.extend({
         }
 
     });
-
-},{"backbone":2}],6:[function(require,module,exports){
-/**
- * Created by charlie on 10/8/16.
- */
-
-'use strict';
-
-var Backbone = require('backbone');
-
-module.exports = function () {
-    return Backbone.Router.extend({
-        routes: {
-            'signup': 'signUp'
-        },
-
-        initialize: function () {
-
-        },
-
-        signUp: function () {
-
-        }
-    });
-};
-
 
 },{"backbone":2}]},{},[4]);

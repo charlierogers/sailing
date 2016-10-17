@@ -14,8 +14,8 @@ module.exports = Backbone.View.extend({
         },
 
         events: {
-            'click #login-btn': 'login',
-            'click #signup-btn': 'signUp'
+            // 'click #login-btn': 'login',
+            // 'click #signup-btn': 'signUp'
         },
         
         login: function () {
