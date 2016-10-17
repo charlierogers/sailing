@@ -16,6 +16,8 @@ app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveU
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.set('view engine', 'ejs');
+
 var port = process.env.PORT || 3000;
 
 // var connection = mysql.createConnection({
@@ -76,7 +78,7 @@ function initialAuthentication(req, res, next) {
 app.get('/',
     initialAuthentication,
     function (req, res) {
-        res.send("This is the website root");
+        res.render('index_backbone');
 });
 
 app.listen(port, function () {

@@ -23,6 +23,9 @@
     "mysql": "^2.11.1",
     "passport": "^0.3.2",
     "passport-google-oauth": "^1.0.0"
+    "bootstrap": "~3.3.7",
+    "ejs": "~2.5.2",
+    "requirejs": "~2.3.2"
   },
   "devDependencies": {
     "browserify": "^13.1.0",
