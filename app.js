@@ -9,12 +9,13 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var app = express();
 
 app.use(express.static('public'));
-// app.use(express.static('src/views'));
 app.use(express.static('src/js'));
 app.set('views', './src/views');
 app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.set('view engine', 'ejs');
 
 var port = process.env.PORT || 3000;
 
@@ -76,7 +77,7 @@ function initialAuthentication(req, res, next) {
 app.get('/',
     initialAuthentication,
     function (req, res) {
-        res.send("This is the website root");
+        res.render('index_backbone');
 });
 
 app.listen(port, function () {
