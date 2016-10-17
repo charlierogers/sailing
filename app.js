@@ -35,9 +35,9 @@ passport.use(new GoogleStrategy({
         clientSecret: 'NPsIXIVpJTiv7LBY-3iglacM',
         callbackURL: 'http://localhost:3000/auth/google/callback'
     },
-    function (accessToken, refreshToken, profile, done) {
+    function (token, refreshToken, profile, done) {
         process.nextTick(function () {
-            return done(null, profile);
+            done(new Error("Must use a Google Account on the umich.edu domain"));
         });
     })
 );
@@ -52,12 +52,12 @@ passport.deserializeUser(function (id, done) {
 
 app.get('/auth/google', passport.authenticate('google',
     { scope: ['https://www.googleapis.com/auth/userinfo.profile',
-        'https://www.googleapis.com/auth/userinfo.email'] }),
+        'https://www.googleapis.com/auth/userinfo.email'], hostedDomain: 'umich.edu' }),
     function(req, res){} // this never gets called
 );
 
 app.get('/auth/google/callback',
-    passport.authenticate('google', { failureRedirect: '/login' }),
+    passport.authenticate('google', {failureRedirect: '/login'}),
     function (req, res) {
         res.redirect('/');
 });
