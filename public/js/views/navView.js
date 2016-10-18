@@ -13,7 +13,7 @@ define([
 		selectedTab: 0,
 
 		render: function() {
-			this.$el.html(this.template({userName: "Mason Wolters", selectedTab: this.selectedTab}));
+			this.$el.html(this.template({userName: $('#username').data("username"), selectedTab: this.selectedTab}));
 		},
 
 		updateTabSelected: function(selectedIndex) {

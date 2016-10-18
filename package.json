@@ -25,7 +25,9 @@
     "passport-google-oauth": "^1.0.0",
     "bootstrap": "~3.3.7",
     "ejs": "~2.5.2",
-    "requirejs": "~2.3.2"
+    "requirejs": "~2.3.2",
+    "mongodb": "~2.2.10",
+    "body-parser": "~1.15.2"
   },
   "devDependencies": {
     "browserify": "^13.1.0",

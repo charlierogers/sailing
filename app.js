@@ -5,8 +5,16 @@
 var express = require('express');
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var MongoClient = require('mongodb').MongoClient;
 // var mysql = require('mysql');
 var app = express();
+
+var mongoUrl = "mongodb://localhost:27017/sailing";
+var db;
+
+var bodyParser = require('body-parser');
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 app.use(express.static('public'));
 // app.use(express.static('src/views'));
@@ -34,9 +42,13 @@ var port = process.env.PORT || 3000;
 passport.use(new GoogleStrategy({
         clientID: '944893219297-pdvm4didh2ag4t9ghpr1ptqeu5bjd5jv.apps.googleusercontent.com',
         clientSecret: 'NPsIXIVpJTiv7LBY-3iglacM',
-        callbackURL: 'http://localhost:3000/auth/google/callback'
+        callbackURL: '/auth/google/callback'
     },
     function (accessToken, refreshToken, profile, done) {
+    	// db.collection("Users").insert({
+    	// 	_id: profile.id,
+    	// 	name: profile.displayName
+    	// });
         process.nextTick(function () {
             return done(null, profile);
         });
@@ -48,12 +60,16 @@ passport.serializeUser(function (user, done) {
 });
 
 passport.deserializeUser(function (id, done) {
-        done(null, id);
+    done(null, id);
 });
 
-app.get('/auth/google', passport.authenticate('google',
-    { scope: ['https://www.googleapis.com/auth/userinfo.profile',
-        'https://www.googleapis.com/auth/userinfo.email'] }),
+app.get('/auth/google', 
+	passport.authenticate('google', { 
+    		scope: ['https://www.googleapis.com/auth/userinfo.profile',
+        			'https://www.googleapis.com/auth/userinfo.email'
+        			],
+        	hostedDomain: "umich.edu" 
+        }),
     function(req, res){} // this never gets called
 );
 
@@ -78,9 +94,20 @@ function initialAuthentication(req, res, next) {
 app.get('/',
     initialAuthentication,
     function (req, res) {
-        res.render('index_backbone');
+    	// res.send(req.user);
+        res.render('index_backbone', {username: req.user.displayName});
 });
 
-app.listen(port, function () {
-    console.log('Listening on port ' + port + '...');
+MongoClient.connect(mongoUrl, function(err, database) {
+	console.log("Connected successfully to mongo");
+	db = database;
+
+	require('./src/js/api/practices.js')(app);
+	require('./src/js/api/events.js')(app, db);
+	require('./src/js/api/users.js')(app);
+	require('./src/js/api/regattas.js')(app);
+
+	app.listen(port, function () {
+	    console.log('Listening on port ' + port + '...');
+	});
 });
