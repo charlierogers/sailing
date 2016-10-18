@@ -49,7 +49,8 @@ passport.use(new GoogleStrategy({
     	// 	name: profile.displayName
     	// });
         process.nextTick(function () {
-            done(new Error("Must use a Google Account on the umich.edu domain"));
+        	return done(null, profile);
+            // done(new Error("Must use a Google Account on the umich.edu domain"));
         });
     })
 );
