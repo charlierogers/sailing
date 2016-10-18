@@ -17,7 +17,6 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 app.use(express.static('public'));
-// app.use(express.static('src/views'));
 app.use(express.static('src/js'));
 app.set('views', './src/views');
 app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
@@ -50,7 +49,7 @@ passport.use(new GoogleStrategy({
     	// 	name: profile.displayName
     	// });
         process.nextTick(function () {
-            return done(null, profile);
+            done(new Error("Must use a Google Account on the umich.edu domain"));
         });
     })
 );
@@ -74,7 +73,7 @@ app.get('/auth/google',
 );
 
 app.get('/auth/google/callback',
-    passport.authenticate('google', { failureRedirect: '/login' }),
+    passport.authenticate('google', {failureRedirect: '/login'}),
     function (req, res) {
         res.redirect('/');
 });
