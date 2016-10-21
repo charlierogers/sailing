@@ -1,8 +1,8 @@
 require('mongodb');
+var ObjectId = require('mongodb').ObjectId;
 
-module.exports = function(app, db) {
+module.exports = function(router, db) {
 
-	var rootUrl = '/api/v1';
 	var events = db.collection("events");
 
 
@@ -11,19 +11,19 @@ module.exports = function(app, db) {
 	// --------------------- //
 
 	//GET /events/:eventId
-	app.get(rootUrl + '/events/:eventId', function(req, res) {
+	router.get('/events/:eventId', function(req, res) {
 		var eventId = req.params.eventId;
 
 		res.send(eventId);
 	});
 
 	//PUT /events/:eventId
-	app.put(rootUrl + '/events/:eventId', function(req, res) {
+	router.put('/events/:eventId', function(req, res) {
 
 	});
 
 	//DELETE /events/:eventId
-	app.delete(rootUrl + '/events/:eventId', function(req, res) {
+	router.delete('/events/:eventId', function(req, res) {
 
 	});
 
@@ -33,14 +33,14 @@ module.exports = function(app, db) {
 	// --------------------- //
 
 	//GET /events
-	app.get(rootUrl + '/events', function(req, res) {
+	router.get('/events', function(req, res) {
 		events.find().toArray(function(err, items) {
 			res.send(items);
 		});
 	});
 
 	//POST /events
-	app.post(rootUrl + '/events', function(req, res) {
+	router.post('/events', function(req, res) {
 		events.insert(req.body);
 
 		res.send("inserted?");

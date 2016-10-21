@@ -11,6 +11,7 @@ define([
 ], function($, _, Backbone, NavView, PracticeView, RegattasView, CalendarView, RosterView, ProfileView) {
 	var AppRouter = Backbone.Router.extend({
 		routes:{
+			'': 'home',
 			'practice': 'practice',
 			'regattas': 'regattas',
 			'calendar': 'calendar',
@@ -24,6 +25,13 @@ define([
 
 		var navView = new NavView;
 		navView.render();
+
+		app_router.on('route:home', function() {
+			var practiceView = new PracticeView;
+			practiceView.render();
+
+			app_router.navigate('practice');
+		});
 
 		app_router.on('route:practice', function() {
 			var practiceView = new PracticeView;

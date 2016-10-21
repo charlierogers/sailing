@@ -1,8 +1,7 @@
+require('mongodb');
+var ObjectId = require('mongodb').ObjectId;
 
-
-module.exports = function(app) {
-
-	var rootUrl = '/api/v1';
+module.exports = function(router) {
 
 
 	// --------------------- //
@@ -10,17 +9,17 @@ module.exports = function(app) {
 	// --------------------- //
 
 	//GET /regattas/:regattaId
-	app.get(rootUrl + '/regattas/:regattaId', function(req, res) {
+	router.get('/regattas/:regattaId', function(req, res) {
 
 	});
 
 	//PUT /regattas/:regattaId
-	app.put(rootUrl + '/regattas/:regattaId', function(req, res) {
+	router.put('/regattas/:regattaId', function(req, res) {
 
 	});
 
 	//DELETE /regattas/:regattaId
-	app.delete(rootUrl + '/regattas/:regattaId', function(req, res) {
+	router.delete('/regattas/:regattaId', function(req, res) {
 
 	});
 
@@ -30,12 +29,12 @@ module.exports = function(app) {
 	// --------------------- //
 
 	//GET /regattas
-	app.get(rootUrl + '/regattas', function(req, res) {
+	router.get('/regattas', function(req, res) {
 		res.send('/regattas');
 	});
 
 	//POST /regattas
-	app.post(rootUrl + '/regattas', function(req, res) {
+	router.post('/regattas', function(req, res) {
 
 	});
 
@@ -45,17 +44,17 @@ module.exports = function(app) {
 	// --------------------- //
 
 	//GET /regattas/signups/:signupId
-	app.get(rootUrl + '/regattas/signups/:signupId', function(req, res) {
+	router.get('/regattas/signups/:signupId', function(req, res) {
 
 	});
 
 	//PUT /regattas/signups/:signupId
-	app.put(rootUrl + '/regattas/signups/:signupId', function(req, res) {
+	router.put('/regattas/signups/:signupId', function(req, res) {
 
 	});
 
 	//DELETE /regattas/signups/:signupId
-	app.delete(rootUrl + '/regattas/signups/:signupId', function(req, res) {
+	router.delete('/regattas/signups/:signupId', function(req, res) {
 
 	});
 
@@ -65,12 +64,12 @@ module.exports = function(app) {
 	// -------------------------- 	//
 
 	//GET /regattas/:regattaId/signups
-	app.get(rootUrl + '/regattas/:regattaId/signups', function(req, res) {
+	router.get('/regattas/:regattaId/signups', function(req, res) {
 
 	});
 
 	//POST /regattas/:regattaId/signups
-	app.post(rootUrl + '/regattas/:regattaId/signups', function(req, res) {
+	router.post('/regattas/:regattaId/signups', function(req, res) {
 
 	});
 

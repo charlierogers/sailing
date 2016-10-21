@@ -1,0 +1,10 @@
+
+
+
+<h5><%= car["user"]["name"] %></h5>
+<ul class="peopleList">
+	<% _.each(car["passengers"], function(person) { %>
+		<li><%= person["name"] %></li>
+	<% }); %>
+	<li><a id="joinCarButton">Join Car</a></li>
+</ul>

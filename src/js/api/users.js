@@ -1,25 +1,33 @@
+require('mongodb');
 
+module.exports = function(router, db) {
 
-module.exports = function(app) {
-
-	var rootUrl = '/api/v1';
+	var users = db.collection("users");
 
 	// --------------------- //
 	//		User 			 //
 	// --------------------- //
 
 	//GET /users/:userId
-	app.get(rootUrl + '/users/:userId', function(req, res) {
-
+	router.get('/users/:userId', function(req, res) {
+		users.findOne({
+			_id: req.params.userId
+		}, function(err, user) {
+			if (err) {
+				res.status(500).send(err);
+			} else {
+				res.send(user);
+			}
+		});
 	});
 
 	//PUT /users/:userId
-	app.put(rootUrl + '/users/:userId', function(req, res) {
+	router.put('/users/:userId', function(req, res) {
 
 	});
 
 	//DELETE /users/:userId
-	app.delete(rootUrl + '/users/:userId', function(req, res) {
+	router.delete('/users/:userId', function(req, res) {
 
 	});
 
@@ -28,12 +36,14 @@ module.exports = function(app) {
 	// --------------------- //
 
 	//GET /users
-	app.get(rootUrl + '/users', function(req, res) {
-		res.send('/users');
+	router.get('/users', function(req, res) {
+		users.find().toArray(function(err, items) {
+			res.send(items);
+		});
 	});
 
 	//POST /users
-	app.post(rootUrl + '/users', function(req, res) {
+	router.post('/users', function(req, res) {
 		
 	});
 

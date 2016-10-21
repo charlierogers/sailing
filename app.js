@@ -44,10 +44,28 @@ passport.use(new GoogleStrategy({
         callbackURL: '/auth/google/callback'
     },
     function (accessToken, refreshToken, profile, done) {
-    	// db.collection("Users").insert({
-    	// 	_id: profile.id,
-    	// 	name: profile.displayName
-    	// });
+    	var user = db.collection("users").findOne({
+    		_id: profile.id
+    	});
+
+    	console.log("user: ");
+    	console.log(user);
+
+    	db.collection("users").insert({
+    			_id: profile.id,
+    			name: profile.displayName,
+    			admin: false,
+    			phone: "",
+    			seats: 0,
+    			position: ""
+    		});
+    	if (user) {
+
+    	} else {
+	    	console.log("google id:" + profile.id);
+
+    		
+    	}
         process.nextTick(function () {
         	return done(null, profile);
             // done(new Error("Must use a Google Account on the umich.edu domain"));
@@ -95,6 +113,7 @@ app.get('/',
     initialAuthentication,
     function (req, res) {
     	// res.send(req.user);
+    	console.log(req.user);
         res.render('index_backbone', {username: req.user.displayName});
 });
 
@@ -102,10 +121,11 @@ MongoClient.connect(mongoUrl, function(err, database) {
 	console.log("Connected successfully to mongo");
 	db = database;
 
-	require('./src/js/api/practices.js')(app);
-	require('./src/js/api/events.js')(app, db);
-	require('./src/js/api/users.js')(app);
-	require('./src/js/api/regattas.js')(app);
+	require('./src/js/api/api.js')(app, db);
+	// require('./src/js/api/practices.js')(app, db);
+	// require('./src/js/api/events.js')(app, db);
+	// require('./src/js/api/users.js')(app);
+	// require('./src/js/api/regattas.js')(app);
 
 	app.listen(port, function () {
 	    console.log('Listening on port ' + port + '...');
