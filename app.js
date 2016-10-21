@@ -109,12 +109,21 @@ function initialAuthentication(req, res, next) {
 
 //End Authentication
 
+//function to replace resolution of google photo
+String.prototype.replaceAt=function(index, character) {
+    return this.substr(0, index) + character + this.substr(index+character.length);
+}
+
 app.get('/',
     initialAuthentication,
     function (req, res) {
     	// res.send(req.user);
-    	console.log(req.user);
-        res.render('index_backbone', {username: req.user.displayName});
+        var userphoto = req.user.photos[0].value;
+        var lastIndex = userphoto.lastIndexOf('=');
+        userphoto = userphoto.replaceAt(lastIndex + 1, '4');
+        userphoto += '0';
+        console.log(req.user);
+        res.render('index_backbone', {username: req.user.displayName, userphoto: userphoto});
 });
 
 MongoClient.connect(mongoUrl, function(err, database) {

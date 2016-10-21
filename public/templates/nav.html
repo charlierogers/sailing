@@ -20,7 +20,12 @@
         <li <% if (selectedTab == 3) { %> class="active" <% } %>><a href="#roster">Roster</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li <% if (selectedTab == 4) { %> class="active" <% } %>><a href="#profile"><%= userName %></a></li>
+        <li <% if (selectedTab == 4) { %> class="active" <% } %>>
+            <a href="#profile" id="profile">
+              <img id="profile-pic" src="<%= userphoto %>">
+              <%= userName %>
+            </a>
+        </li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
