@@ -24,7 +24,8 @@ define([
 
 		events: {
 			"click #joinCarButton": "join",
-			"click #deletePerson": "deletePerson"
+			"click #deletePerson": "deletePerson",
+			"click #deleteCar": "deleteCar"
 		},
 
 		initialize: function() {
@@ -76,6 +77,11 @@ define([
 				}
 			});
 
+		},
+
+		deleteCar: function() {
+			// this.deleteCallback(this.model);
+			this.model.destroy();
 		}
 	});
 
@@ -92,8 +98,8 @@ define([
 		template: _.template(PracticeCellTemplate),
 
 		initialize: function() {
-			this.listenTo(this.collection, 'add', this.render);
-			this.listenTo(this.collection, 'remove', this.render);
+			this.listenTo(this.model.get("signups"), 'add', this.render);
+			this.listenTo(this.model.get("signups"), 'remove', this.render);
 			this.render();
 		},
 
@@ -123,7 +129,6 @@ define([
 			newSignup.set('passengers', new PracticeSignupCollection());
 			this.model.get("signups").add(newSignup);
 			newSignup.save();
-			this.render();
 		},
 
 		joinWaitlist: function() {

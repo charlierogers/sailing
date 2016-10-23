@@ -1,7 +1,7 @@
 
 
 
-<h5><%= car["user"]["name"] %></h5>
+<a id="deleteCar">X</a><h5><%= car["user"]["name"] %></h5>
 <ul class="peopleList">
 	<% passengers.each(function(signup) { %>
 		<li><a id="deletePerson" data-signup="<%= signup.id %>">X</a><%= signup.get("user")["name"] %></li>
