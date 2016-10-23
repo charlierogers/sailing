@@ -24,6 +24,17 @@
 	padding-left: 0;
 }
 
+#profile-pic {
+	height: 40px;
+	width: 40px;
+	border-radius: 50%;
+}
+
+#profile {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
 a {
 	cursor: pointer;
 }
