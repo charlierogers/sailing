@@ -113,12 +113,17 @@ app.get('/',
     initialAuthentication,
     function (req, res) {
     	// res.send(req.user);
-    	console.log(req.user);
+    	// console.log(req.user);
         res.render('index_backbone', {username: req.user.displayName});
 });
 
 MongoClient.connect(mongoUrl, function(err, database) {
-	console.log("Connected successfully to mongo");
+	if (err) {
+		console.log("Error connecting to mongo");
+		console.log(err);
+	} else {
+		console.log("Connected successfully to mongo");
+	}
 	db = database;
 
 	require('./src/js/api/api.js')(app, db);

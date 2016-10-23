@@ -3,16 +3,17 @@ define([
 	'backbone',
 	'underscore',
 	'moment',
-	'models/practiceCollection',
 	'models/practiceModels',
 	'text!/templates/practice/practice.html',
 	'text!/templates/practice/practiceCell.html',
 	'text!/templates/practice/carCell.html'
-], function($, Backbone, _, moment, PracticeCollection, PracticeModels, 
+], function($, Backbone, _, moment, PracticeModels, 
 	PracticeTemplate, PracticeCellTemplate, CarCellTemplate) {
 
 	var PracticeModel = PracticeModels.PracticeModel;
 	var PracticeSignupModel = PracticeModels.PracticeSignupModel;
+	var PracticeCollection = PracticeModels.PracticeCollection;
+	var PracticeSignupCollection = PracticeModels.PracticeSignupCollection;
 
 	var CarCell = Backbone.View.extend({
 		tagName: 'div',
@@ -22,20 +23,59 @@ define([
 		template: _.template(CarCellTemplate),
 
 		events: {
-			"click #joinCarButton": "join"
+			"click #joinCarButton": "join",
+			"click #deletePerson": "deletePerson"
 		},
 
 		initialize: function() {
+			this.listenTo(this.collection, 'add', this.render);
+			this.listenTo(this.collection, 'remove', this.render);
+			this.listenTo(this.collection, 'change', this.render);
+			this.listenTo(this.model, 'change', this.render);
+
 			this.render();
 		},
 
 		render: function() {
-			this.$el.html(this.template({_: _, car: this.model}));
+			this.$el.html(this.template({_: _, car: this.model.attributes, passengers: this.collection}));
 		},
 
 		join: function() {
-			this.people.push("Person 3");
-			this.render();
+
+			var newSignup = new PracticeSignupModel();
+			newSignup.set('practiceId', this.model.get('practiceId'));
+			newSignup.set('user', {
+				"name": $('#username').data("username")
+			});
+			newSignup.set('parentSignupId', this.model.get('_id').toString());
+			newSignup.set('passengerLimit', 0);
+			this.collection.add(newSignup);
+			newSignup.save();
+		},
+
+		deletePerson: function(e) {
+			var signupId = $(e.target).data('signup');
+
+			var predicate = function(signup) {
+				return signup["_id"] == signupId;
+			};
+
+			var predicate2 = function(signup) {
+				return signup.id == signupId;
+			};
+
+			var signup = this.collection.find(predicate2);
+			this.collection.remove(signup);
+
+			signup.destroy({
+				success: function(model, response) {
+					console.log("Success deleting signup");
+				},
+				error: function() {
+					console.log("Error deleting signup");
+				}
+			});
+
 		}
 	});
 
@@ -44,9 +84,16 @@ define([
 
 		className: 'row show-grid',
 
+		events: {
+			"click #addCar": "addCar",
+			"click #joinWaitlist": "joinWaitlist"
+		},
+
 		template: _.template(PracticeCellTemplate),
 
 		initialize: function() {
+			this.listenTo(this.collection, 'add', this.render);
+			this.listenTo(this.collection, 'remove', this.render);
 			this.render();
 		},
 
@@ -56,34 +103,42 @@ define([
 				date: moment(this.model.get("startDate")).format('dddd, MMM D')
 			}));
 
-			for (var i = 0; i < this.model.get("signups").length; i++) {
-				var signup = this.model.get("signups")[i];
-
-				var carCell = new CarCell({model: signup});
+			this.model.get("signups").each(function(signup) {
+				console.log(signup.get("user")["name"] + ", " + this.model.get("startDate"));
+				var carCell = new CarCell({model: signup, collection: signup.get("passengers")});
 				this.$("#carsContainer").prepend(carCell.el);
-			}
+			}, this);
+		},
 
-			// for (var i = 0; i < 5; i++) {
-			// 	var carCell = new CarCell();
-			// 	carCell.people = ["Person 1", "Person 2"];
-			// 	this.$('#carsContainer').prepend(carCell.el);
-			// }
+		addCar: function() {
+			console.log("add car");
+
+			var newSignup = new PracticeSignupModel();
+			newSignup.set('practiceId', this.model.id);
+			newSignup.set('user', {
+				"name": $('#username').data("username")
+			});
+			newSignup.set('parentSignupId', '');
+			newSignup.set('passengerLimit', 4);
+			newSignup.set('passengers', new PracticeSignupCollection());
+			this.model.get("signups").add(newSignup);
+			newSignup.save();
+			this.render();
+		},
+
+		joinWaitlist: function() {
+			console.log("join waitlist");
 		}
 	});
 
 	var PracticeView = Backbone.View.extend({
 		el: $('#content'),
 
-		events: {
-			"click #joinWaitlist": "joinWaitlist",
-			"click #addCar": "addCar"
-		},
-
 		template: _.template(PracticeTemplate),
 
 		initialize: function() {
 			this.collection = new PracticeCollection();
-			this.listenTo(this.collection, 'add', this.render);
+			this.listenTo(this.collection, 'sync', this.render);
 
 			var pastThis = this;
 			this.collection.fetch();
@@ -96,15 +151,7 @@ define([
 				var practiceCell = new PracticeCell({model: model});
 				$('#practiceContainer').append(practiceCell.el);
 				$('#practiceContainer').append('<br>');
-			});
-		},
-
-		joinWaitlist: function() {
-
-		},
-
-		addCar: function() {
-
+			}, this);
 		}
 	});
 

@@ -134,8 +134,6 @@ module.exports = function(router, db) {
 				return practice._id.toString();
 			});
 
-			console.log(practiceIds);
-
 			practiceSignups.find({practiceId: {
 				$in: practiceIds
 			}}).toArray(function(signupsErr, signups) {
@@ -144,23 +142,21 @@ module.exports = function(router, db) {
 					var cars = _.filter(signups, function(signup) {
 						return signup["practiceId"] == practice._id.toString() && signup["parentSignupId"] == "" && signup["passengerLimit"] != 0;
 					});
-					console.log(cars);
 
 					_.each(cars, function(car) {
 						var childSignups = _.filter(signups, function(signup) {
 							return signup["practiceId"] == practice._id.toString() && signup["parentSignupId"] == car._id.toString();
 						});
-						car["passengers"] = _.map(childSignups, function(signup) {
-							return {
-								name: signup["user"]["name"]
-							}
-						});
+						// car["passengers"] = _.map(childSignups, function(signup) {
+						// 	return {
+						// 		name: signup["user"]["name"]
+						// 	}
+						// });
+						car["passengers"] = childSignups;
 					});
 
 					practice["signups"] = cars;
 				});
-
-				console.log(items);
 
 				if (err) {
 					res.status(500).send(err);
@@ -218,9 +214,45 @@ module.exports = function(router, db) {
 
 	});
 
+	router.post('/practices/signups', function(req, res) {
+		console.log("POST /practices/signups");
+		console.log(req.body);
+		practiceSignups.insert(req.body, function(err, result) {
+			if (err) {
+				console.log(err);
+				res.status(500).send(err);
+			} else {
+				console.log("result: ");
+				console.log(result.ops[0]);
+				//result.ops[0] COULD BREAK
+				res.send(result.ops[0]);
+			}
+		});
+	});
+
+	router.delete('/practices/signups/:signupId', function(req, res) {
+		console.log("DELETE /practices/signups/" + req.params.signupId);
+		console.log(req.body);
+		practiceSignups.remove({
+			_id: ObjectId(req.params.signupId)
+		}, function(err, result) {
+			if (err) {
+				console.log(err);
+				res.status(500).send(err);
+			} else {
+				res.send("success");
+			}
+		});
+	});
+
 	//POST /practices/:practiceId/signups
 	router.post('/practices/:practiceId/signups', function(req, res) {
-		
+		console.log("POST /practices/" + req.params.practiceId + "/signups");
+		console.log(req.body);
+		practiceSignups.insert(req.body, function(err, result) {
+			res.send(result);
+		});
+
 	});
 
 }
