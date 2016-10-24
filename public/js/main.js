@@ -3,7 +3,8 @@ require.config({
 		jquery: 'libs/jquery/jquery-3.1.1.min',
 		underscore: 'libs/underscore/underscore-min',
 		backbone: 'libs/backbone/backbone-min',
-		moment: 'libs/moment/moment'
+		moment: 'libs/moment/moment',
+		socketio: 'libs/socketio/socket.io'
 	}
 });
 

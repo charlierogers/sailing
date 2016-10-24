@@ -8,6 +8,8 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var MongoClient = require('mongodb').MongoClient;
 // var mysql = require('mysql');
 var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 var mongoUrl = "mongodb://localhost:27017/sailing";
 var db;
@@ -36,6 +38,13 @@ var port = process.env.PORT || 3000;
 
 // connection.connect();
 
+io.on('connection', function(socket) {
+	console.log('a user connected');
+	socket.emit('test');
+	socket.on('disconnect', function() {
+		console.log('user disconnected');
+	});
+});
 
 //Authentication
 passport.use(new GoogleStrategy({
@@ -135,13 +144,17 @@ MongoClient.connect(mongoUrl, function(err, database) {
 	}
 	db = database;
 
-	require('./src/js/api/api.js')(app, db);
+	require('./src/js/api/api.js')(app, db, io);
 	// require('./src/js/api/practices.js')(app, db);
 	// require('./src/js/api/events.js')(app, db);
 	// require('./src/js/api/users.js')(app);
 	// require('./src/js/api/regattas.js')(app);
 
-	app.listen(port, function () {
+	http.listen(port, function() {
 	    console.log('Listening on port ' + port + '...');
 	});
+
+	// app.listen(port, function () {
+	//     console.log('Listening on port ' + port + '...');
+	// });
 });

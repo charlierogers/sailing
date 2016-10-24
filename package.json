@@ -28,7 +28,9 @@
     "requirejs": "~2.3.2",
     "mongodb": "~2.2.10",
     "body-parser": "~1.15.2",
-    "underscore": "~1.8.3"
+    "underscore": "~1.8.3",
+    "socket.io": "~1.5.1",
+    "http": "0.0.0"
   },
   "devDependencies": {
     "browserify": "^13.1.0",

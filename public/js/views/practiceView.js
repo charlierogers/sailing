@@ -3,11 +3,12 @@ define([
 	'backbone',
 	'underscore',
 	'moment',
+	'socketio',
 	'models/practiceModels',
 	'text!/templates/practice/practice.html',
 	'text!/templates/practice/practiceCell.html',
 	'text!/templates/practice/carCell.html'
-], function($, Backbone, _, moment, PracticeModels, 
+], function($, Backbone, _, moment, io, PracticeModels, 
 	PracticeTemplate, PracticeCellTemplate, CarCellTemplate) {
 
 	var PracticeModel = PracticeModels.PracticeModel;
@@ -175,6 +176,13 @@ define([
 
 			var pastThis = this;
 			this.collection.fetch();
+
+			this.socket = io();
+
+			var that = this;
+			this.socket.on('newSignup', function(socket) {
+				that.collection.fetch();
+			});
 		},
 
 		render: function() {
@@ -182,8 +190,8 @@ define([
 
 			this.collection.each(function(model) {
 				var practiceCell = new PracticeCell({model: model});
-				$('#practiceContainer').append(practiceCell.el);
-				$('#practiceContainer').append('<br>');
+				this.$('#practiceContainer').append(practiceCell.el);
+				this.$('#practiceContainer').append('<br>');
 			}, this);
 		}
 	});

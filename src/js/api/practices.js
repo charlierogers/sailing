@@ -2,7 +2,7 @@ require('mongodb');
 _ = require('underscore');
 var ObjectId = require('mongodb').ObjectId;
 
-module.exports = function(router, db) {
+module.exports = function(router, db, io) {
 
 	var practices = db.collection("practices");
 	var practiceSignups = db.collection("practiceSignups");
@@ -212,6 +212,7 @@ module.exports = function(router, db) {
 							if (err) {
 								console.log(err);
 							} 
+							io.emit('newSignup');
 							res.send(item);
 						});
 					});
@@ -241,6 +242,7 @@ module.exports = function(router, db) {
 					console.log(err);
 					res.status(500).send(err);
 				} else {
+					io.emit('newSignup');
 					res.send("success");
 				}
 			});
