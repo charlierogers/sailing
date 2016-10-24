@@ -46,8 +46,11 @@ define([
 			var newSignup = new PracticeSignupModel();
 			newSignup.set('practiceId', this.model.get('practiceId'));
 			newSignup.set('user', {
-				"name": $('#username').data("username")
+				"name": $('#username').data("username"),
+				'userId': $('#userId').data('userid')
+				// "name": "Mike Gapuz"
 			});
+			newSignup.set('timestamp', new Date());
 			newSignup.set('parentSignupId', this.model.get('_id').toString());
 			newSignup.set('passengerLimit', 0);
 			this.collection.add(newSignup);
@@ -58,14 +61,10 @@ define([
 			var signupId = $(e.target).data('signup');
 
 			var predicate = function(signup) {
-				return signup["_id"] == signupId;
-			};
-
-			var predicate2 = function(signup) {
 				return signup.id == signupId;
 			};
 
-			var signup = this.collection.find(predicate2);
+			var signup = this.collection.find(predicate);
 			this.collection.remove(signup);
 
 			signup.destroy({
@@ -92,7 +91,8 @@ define([
 
 		events: {
 			"click #addCar": "addCar",
-			"click #joinWaitlist": "joinWaitlist"
+			"click #joinWaitlist": "joinWaitlist",
+			"click #deleteFromPool": "deleteFromPool"
 		},
 
 		template: _.template(PracticeCellTemplate),
@@ -100,6 +100,8 @@ define([
 		initialize: function() {
 			this.listenTo(this.model.get("signups"), 'add', this.render);
 			this.listenTo(this.model.get("signups"), 'remove', this.render);
+			this.listenTo(this.model.get("pool"), 'add', this.render);
+			this.listenTo(this.model.get("pool"), 'remove', this.render);
 			this.render();
 		},
 
@@ -110,7 +112,11 @@ define([
 			}));
 
 			this.model.get("signups").each(function(signup) {
-				console.log(signup.get("user")["name"] + ", " + this.model.get("startDate"));
+				if (signup.get('timestamp')) {
+					var mom = moment(signup.get('timestamp'));
+					console.log(mom.format('dddd, MMM D hh:mm'));
+					console.log(signup.get('timestamp'));
+				}
 				var carCell = new CarCell({model: signup, collection: signup.get("passengers")});
 				this.$("#carsContainer").prepend(carCell.el);
 			}, this);
@@ -122,8 +128,10 @@ define([
 			var newSignup = new PracticeSignupModel();
 			newSignup.set('practiceId', this.model.id);
 			newSignup.set('user', {
-				"name": $('#username').data("username")
+				"name": $('#username').data("username"),
+				"userId": $('#userId').data("userid")
 			});
+			newSignup.set('timestamp', new Date());
 			newSignup.set('parentSignupId', '');
 			newSignup.set('passengerLimit', 4);
 			newSignup.set('passengers', new PracticeSignupCollection());
@@ -132,7 +140,27 @@ define([
 		},
 
 		joinWaitlist: function() {
-			console.log("join waitlist");
+			var newSignup = new PracticeSignupModel();
+			newSignup.set('practiceId', this.model.id);
+			newSignup.set('user', {
+				"name": $('#username').data("username"),
+				'userId': $('#userId').data('userid')
+			});
+			newSignup.set('timestamp', new Date());
+			newSignup.set('parentSignupId', '');
+			newSignup.set('passengerLimit', 0);
+			this.model.get('pool').add(newSignup);
+			newSignup.save();
+		},
+
+		deleteFromPool: function(e) {
+			var signupId = $(e.target).data('signup');
+
+			var signup = this.model.get("pool").find(function(signup) {
+				return signup.id == signupId;
+			});
+			this.model.get("pool").remove(signup);
+			signup.destroy();
 		}
 	});
 

@@ -37,58 +37,6 @@ module.exports = function(router, db) {
 		res.send("done");
 	});
 
-	router.get('/practices/signups/testData', function(req, res) {
-
-		// practiceSignups.remove();
-
-		// practiceSignups.insertMany([
-		// 		{
-		// 			practiceId: "580988af18f3f93ca19c3428",
-		// 			user: {
-		// 				name: "Mason Wolters"
-		// 			},
-		// 			parentSignupId: "",
-		// 			passengerLimit: 6
-		// 		},
-		// 		{
-		// 			practiceId: "580988af18f3f93ca19c3429",
-		// 			user: {
-		// 				name: "Lane Tobin"
-		// 			},
-		// 			parentSignupId: "",
-		// 			passengerLimit: 5
-		// 		}
-		// 	]);
-
-		practiceSignups.insertMany([
-				{
-					practiceId: "580988af18f3f93ca19c3428",
-					user: {
-						name: "Charlie Rogers"
-					},
-					parentSignupId: "5809895682bbfc3cd964f66b",
-					passengerLimit: 0
-				},
-				{
-					practiceId: "580988af18f3f93ca19c3428",
-					user: {
-						name: "Mike Gapuz"
-					},
-					parentSignupId: "5809895682bbfc3cd964f66b",
-					passengerLimit: 0
-				},
-				{
-					practiceId: "580988af18f3f93ca19c3429",
-					user: {
-						name: "Amy Baer"
-					},
-					parentSignupId: "5809895682bbfc3cd964f66c",
-					passengerLimit: 0
-				}
-			]);
-	});
-
-
 	// --------------------- //
 	//		Practice 		 //
 	// --------------------- //
@@ -140,22 +88,30 @@ module.exports = function(router, db) {
 
 				_.each(items, function(practice) {
 					var cars = _.filter(signups, function(signup) {
-						return signup["practiceId"] == practice._id.toString() && signup["parentSignupId"] == "" && signup["passengerLimit"] != 0;
+						return signup["practiceId"] == practice._id.toString() 
+								&& signup["parentSignupId"] == "" 
+								&& signup["passengerLimit"] != 0;
 					});
 
 					_.each(cars, function(car) {
 						var childSignups = _.filter(signups, function(signup) {
-							return signup["practiceId"] == practice._id.toString() && signup["parentSignupId"] == car._id.toString();
+							return signup["practiceId"] == practice._id.toString() 
+									&& signup["parentSignupId"] == car._id.toString();
 						});
-						// car["passengers"] = _.map(childSignups, function(signup) {
-						// 	return {
-						// 		name: signup["user"]["name"]
-						// 	}
-						// });
 						car["passengers"] = childSignups;
 					});
 
 					practice["signups"] = cars;
+
+					var carIds = _.map(cars, function(car) {
+						return car._id.toString();
+					});
+					var pool = _.filter(signups, function(signup) {
+						return signup["practiceId"] == practice._id.toString() 
+								&& signup["passengerLimit"] == 0
+								&& !_.contains(carIds, signup["parentSignupId"])
+					});
+					practice["pool"] = pool;
 				});
 
 				if (err) {
@@ -216,16 +172,24 @@ module.exports = function(router, db) {
 
 	router.post('/practices/signups', function(req, res) {
 		console.log("POST /practices/signups");
-		console.log(req.body);
 		practiceSignups.insert(req.body, function(err, result) {
 			if (err) {
 				console.log(err);
 				res.status(500).send(err);
 			} else {
-				console.log("result: ");
-				console.log(result.ops[0]);
 				//result.ops[0] COULD BREAK
-				res.send(result.ops[0]);
+				var item = result.ops[0];
+
+				var additionalPassengersCount = req.body['passengerLimit']-1;
+				practiceSignups.find({
+					practiceId: '580988af18f3f93ca19c3428'
+				},
+									{},
+									{limit: 3}).forEach(function(e) {
+										console.log(e);
+									});
+
+				res.send(item);
 			}
 		});
 	});
