@@ -1,4 +1,5 @@
 require('mongodb');
+var ObjectId = require('mongodb').ObjectId;
 
 module.exports = function(router, db) {
 
@@ -11,7 +12,7 @@ module.exports = function(router, db) {
 	//GET /users/:userId
 	router.get('/users/:userId', function(req, res) {
 		users.findOne({
-			_id: new ObjectId(req.params.userId)
+			_id: req.params.userId
 		}, function(err, user) {
 			if (err) {
 				res.status(500).send(err);

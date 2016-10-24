@@ -1,0 +1,16 @@
+<% if (user.get('photo')) { %>
+	<img class='contactUserPhoto' src='<%= user.get('photo')%>'>
+<% } %>
+
+<h1><%= user.get('name')%></h1>
+
+<% if (user.get('phone') != "") { %>
+	<p>Phone Number: </p>
+	<h5><%= '(' + user.get('phone').slice(0, 3) + ') ' + user.get('phone').slice(3, 6) + '-' + user.get('phone').slice(6)%></h5>
+<% } if (user.get('position') != "") { %>
+	<p>Position: </p>
+	<h5><%= user.get('position')%></h5>
+<% } if (user.get('year') != "") { %>
+	<p>Year: </p>
+	<h5><%= user.get('year')%></h5>
+<% } %>

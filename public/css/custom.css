@@ -37,6 +37,11 @@
 	padding-right: 0px;
 }
 
+.contactUserPhoto {
+	border-radius: 50%;
+	height: 150px;
+}
+
 a {
 	cursor: pointer;
 }
