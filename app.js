@@ -44,28 +44,17 @@ passport.use(new GoogleStrategy({
         callbackURL: '/auth/google/callback'
     },
     function (accessToken, refreshToken, profile, done) {
-    	var user = db.collection("users").findOne({
+        var users = db.collection("users");
+    	users.findOne({
     		_id: profile.id
-    	});
+    	}, function(err, user) {
+            if (user == null) {
+                createNewUser(profile);
+            }
+        });
 
-    	console.log("user: ");
-    	console.log(user);
 
-    	db.collection("users").insert({
-    			_id: profile.id,
-    			name: profile.displayName,
-    			admin: false,
-    			phone: "",
-    			seats: 0,
-    			position: ""
-    		});
-    	if (user) {
 
-    	} else {
-	    	console.log("google id:" + profile.id);
-
-    		
-    	}
         process.nextTick(function () {
         	return done(null, profile);
             // done(new Error("Must use a Google Account on the umich.edu domain"));
@@ -94,6 +83,7 @@ app.get('/auth/google',
 app.get('/auth/google/callback',
     passport.authenticate('google', {failureRedirect: '/login'}),
     function (req, res) {
+        db;
         res.redirect('/');
 });
 
@@ -105,6 +95,18 @@ function ensureAuthenticated(req, res, next) {
 function initialAuthentication(req, res, next) {
     if (req.isAuthenticated()) {return next(); }
     res.redirect('/auth/google');
+}
+
+function createNewUser(profile) {
+    db.collection("users").insert({
+                _id: profile.id,
+                name: profile.displayName,
+                admin: false,
+                phone: "",
+                seats: 0,
+                position: "",
+                year: ""
+    });
 }
 
 //End Authentication
