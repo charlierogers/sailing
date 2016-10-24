@@ -75,6 +75,7 @@ module.exports = function(router, db) {
 
 	//GET /practices
 	router.get('/practices', function(req, res) {
+		console.log("GET /practices");
 
 		practices.find().toArray(function(err, items) {
 
@@ -127,6 +128,8 @@ module.exports = function(router, db) {
 
 	//POST /practices
 	router.post('/practices', function(req, res) {
+		console.log("POST /practices");
+		console.log(req.body);
 
 		practices.insert({
 			title: req.body.title
@@ -181,15 +184,40 @@ module.exports = function(router, db) {
 				var item = result.ops[0];
 
 				var additionalPassengersCount = req.body['passengerLimit']-1;
-				practiceSignups.find({
-					practiceId: '580988af18f3f93ca19c3428'
-				},
-									{},
-									{limit: 3}).forEach(function(e) {
-										console.log(e);
-									});
 
-				res.send(item);
+				if (additionalPassengersCount > 0) {
+
+					/*
+						The following is going to fetch signups that are in the pool
+						sorted by timestamp and limited to the number of seats available
+						in this car. It is then going to update these signups to be
+						children of the new car.
+					*/
+					practiceSignups.find({
+						practiceId: req.body['practiceId'],
+						parentSignupId: "",
+						passengerLimit: 0
+					}).sort({timestamp: -1}).limit(additionalPassengersCount).toArray(function(err, signups) {
+						var signupIds = _.map(signups, function(signup) {
+							return signup._id;
+						});
+
+						practiceSignups.update({
+							_id: {$in: signupIds}
+						}, {
+							$set: {parentSignupId: item._id.toString()}
+						}, {
+							multi: true
+						}, function(err, response) {
+							if (err) {
+								console.log(err);
+							} 
+							res.send(item);
+						});
+					});
+				}
+				
+
 			}
 		});
 	});
@@ -200,12 +228,22 @@ module.exports = function(router, db) {
 		practiceSignups.remove({
 			_id: ObjectId(req.params.signupId)
 		}, function(err, result) {
-			if (err) {
-				console.log(err);
-				res.status(500).send(err);
-			} else {
-				res.send("success");
-			}
+
+			// Update all signups that had this as the parent to parentSignupId = "" so they go back into the pool
+			practiceSignups.update({
+				parentSignupId: req.params.signupId
+			}, {
+				$set: {parentSignupId: ""}
+			}, {
+				multi: true
+			}, function(err, response) {
+				if (err) {
+					console.log(err);
+					res.status(500).send(err);
+				} else {
+					res.send("success");
+				}
+			});
 		});
 	});
 

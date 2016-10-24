@@ -53,8 +53,6 @@ passport.use(new GoogleStrategy({
             }
         });
 
-
-
         process.nextTick(function () {
         	return done(null, profile);
             // done(new Error("Must use a Google Account on the umich.edu domain"));
@@ -125,7 +123,6 @@ app.get('/',
         var lastIndex = userphoto.lastIndexOf('=');
         userphoto = userphoto.replaceAt(lastIndex + 1, '4');
         userphoto += '0';
-        console.log(req.user.id);
         res.render('index_backbone', {username: req.user.displayName, userId: req.user.id, userphoto: userphoto});
 });
 
