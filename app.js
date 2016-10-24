@@ -46,10 +46,10 @@ passport.use(new GoogleStrategy({
     function (accessToken, refreshToken, profile, done) {
     	var user = db.collection("users").findOne({
     		_id: profile.id
+    	}, function(err, user) {
+
     	});
 
-    	console.log("user: ");
-    	console.log(user);
 
     	db.collection("users").insert({
     			_id: profile.id,
@@ -123,7 +123,6 @@ app.get('/',
         var lastIndex = userphoto.lastIndexOf('=');
         userphoto = userphoto.replaceAt(lastIndex + 1, '4');
         userphoto += '0';
-        console.log(req.user.id);
         res.render('index_backbone', {username: req.user.displayName, userId: req.user.id, userphoto: userphoto});
 });
 
