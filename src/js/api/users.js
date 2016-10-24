@@ -11,7 +11,7 @@ module.exports = function(router, db) {
 	//GET /users/:userId
 	router.get('/users/:userId', function(req, res) {
 		users.findOne({
-			_id: req.params.userId
+			_id: new ObjectId(req.params.userId)
 		}, function(err, user) {
 			if (err) {
 				res.status(500).send(err);
